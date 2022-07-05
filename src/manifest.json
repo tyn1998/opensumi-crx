@@ -5,13 +5,10 @@
   "background": { "service_worker": "background.bundle.js" },
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "opensumi.png"
-  },
-  "chrome_url_overrides": {
-    "newtab": "newtab.html"
+    "default_icon": "logo.png"
   },
   "icons": {
-    "128": "opensumi.png"
+    "128": "logo.png"
   },
   "content_scripts": [
     {
@@ -23,7 +20,7 @@
   "devtools_page": "devtools.html",
   "web_accessible_resources": [
     {
-      "resources": ["content.styles.css", "opensumi.png"],
+      "resources": ["content.styles.css", "logo.png"],
       "matches": []
     }
   ]

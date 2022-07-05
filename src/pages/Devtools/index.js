@@ -14,7 +14,7 @@ chrome.devtools.inspectedWindow
 `);
 
 chrome.devtools.panels.create(
-  'OpenSumi Communication Monitor',
-  'opensumi.png',
+  'OpenSumi DevTools',
+  'logo.png',
   'panel.html'
 );
