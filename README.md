@@ -1,4 +1,4 @@
-# opensumi-crx
+# OpenSumi DevTools
 
 
 ## Contributing
