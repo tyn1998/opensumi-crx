@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import './Panel.css';
 import { startCapturing, stopCapturing, getMessages } from '../../capturer';
+import DataGrid from 'react-data-grid';
 
 const INTERVAL = 333;
+
+const columns = [
+  { key: 'id', name: 'ID' },
+  { key: 'time', name: 'Time' },
+  { key: 'message', name: 'Message' },
+];
 
 const Panel = () => {
   const [capturing, setCapturing] = useState(false);
@@ -51,19 +58,16 @@ const Panel = () => {
       <button onClick={stop}>stopCapturing</button>
       <p>{capturing ? 'capturing' : 'not capturing'}</p>
 
-      <table>
-        <tbody>
-          {messages.map((msg, index) => {
-            return (
-              <tr key={`msg_${index}`}>
-                <td>{index}</td>
-                <td>{msg.time}</td>
-                <td>{msg.msg}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <DataGrid
+        columns={columns}
+        rows={messages.map((msg, index) => {
+          return {
+            id: index,
+            time: msg.time,
+            message: msg.msg,
+          };
+        })}
+      />
     </div>
   );
 };
