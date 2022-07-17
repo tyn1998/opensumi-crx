@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { startCapturing, stopCapturing, getMessages } from '../../capturer';
 import DataGrid from 'react-data-grid';
 
-const INTERVAL = 333;
+const INTERVAL = 500;
 
 const commonColumnProperties = {
   resizable: true,
@@ -47,39 +47,38 @@ const MessagesTab = () => {
       });
   };
 
-  const start = () => {
-    startCapturing()
-      .then(() => {
-        setCapturing(true);
-        setTimer(setInterval(() => addMessages(), INTERVAL));
-      })
-      .catch((error) => {
-        console.error('Starting capturing failed!');
-        console.error(error.stack || error);
-      });
-  };
-
-  const stop = () => {
-    stopCapturing()
-      .then(() => {
-        setCapturing(false);
-        clearInterval(timer);
-        setTimer(null);
-      })
-      .catch((error) => {
-        console.error('Stoping capturing failed!');
-        console.error(error.stack || error);
-      });
+  const toggleCapturing = () => {
+    if (capturing === true) {
+      stopCapturing()
+        .then(() => {
+          setCapturing(false);
+          clearInterval(timer);
+          setTimer(null);
+        })
+        .catch((error) => {
+          console.error('Stoping capturing failed!');
+          console.error(error.stack || error);
+        });
+    } else {
+      startCapturing()
+        .then(() => {
+          setCapturing(true);
+          setTimer(setInterval(() => addMessages(), INTERVAL));
+        })
+        .catch((error) => {
+          console.error('Starting capturing failed!');
+          console.error(error.stack || error);
+        });
+    }
   };
 
   return (
     <div>
-      <button onClick={start}>startCapturing</button>
-      <button onClick={stop}>stopCapturing</button>
-      <p>{capturing ? 'capturing' : 'not capturing'}</p>
+      <button onClick={toggleCapturing}>toggleCapturing</button>
       <button onClick={toggleAutoScroll}>toggleAutoScroll</button>
 
       <DataGrid
+        style={{ fontSize: '10px', height: 'calc(100vh - 78px' }}
         ref={gridRef}
         columns={columns}
         rows={messages.map((msg, index) => {
