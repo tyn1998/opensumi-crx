@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { startCapturing, stopCapturing, getMessages } from '../../capturer';
 import DataGrid from 'react-data-grid';
 
@@ -20,11 +20,22 @@ const MessagesTab = () => {
   const [capturing, setCapturing] = useState(false);
   const [messages, setMessages] = useState([]);
   const [timer, setTimer] = useState(null);
+  const [bottomRow, setBottomRow] = useState(-1);
+
+  const gridRef = useRef(null);
+
+  useEffect(() => {
+    gridRef.current && gridRef.current.scrollToRow(bottomRow);
+  }, [bottomRow]);
 
   const addMessages = () => {
     getMessages()
-      .then((messages) => {
-        setMessages((oldMessages) => [...oldMessages, ...messages]);
+      .then((newMessages) => {
+        setMessages(oldMessages => [...oldMessages, ...newMessages]);
+        if (newMessages.length > 0) {
+          console.log(messages.length);
+          setBottomRow(oldBottomRow => oldBottomRow + newMessages.length);
+        }
       })
       .catch((error) => {
         console.error('Getting messages failed!');
@@ -64,6 +75,7 @@ const MessagesTab = () => {
       <p>{capturing ? 'capturing' : 'not capturing'}</p>
 
       <DataGrid
+        ref={gridRef}
         columns={columns}
         rows={messages.map((msg, index) => {
           return {
@@ -72,7 +84,7 @@ const MessagesTab = () => {
             message: msg.msg,
           };
         })}
-        rowKeyGetter={row => row.id}
+        rowKeyGetter={(row) => row.id}
         headerRowHeight={30}
         rowHeight={20}
       />
