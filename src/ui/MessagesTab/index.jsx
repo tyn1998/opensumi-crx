@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './Panel.css';
 import { startCapturing, stopCapturing, getMessages } from '../../capturer';
 import DataGrid from 'react-data-grid';
 
@@ -17,7 +16,7 @@ const columns = [
   { key: 'message', name: 'Message' },
 ].map((c) => ({ ...c, ...commonColumnProperties }));
 
-const Panel = () => {
+const MessagesTab = () => {
   const [capturing, setCapturing] = useState(false);
   const [messages, setMessages] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -81,4 +80,4 @@ const Panel = () => {
   );
 };
 
-export default Panel;
+export default MessagesTab;
