@@ -5,11 +5,17 @@ import DataGrid from 'react-data-grid';
 
 const INTERVAL = 333;
 
+const commonColumnProperties = {
+  resizable: true,
+  sortable: true,
+  filterable: true,
+};
+
 const columns = [
-  { key: 'id', name: 'ID' },
-  { key: 'time', name: 'Time' },
+  { key: 'id', name: 'ID', width: 50, frozen: true },
+  { key: 'time', name: 'Time', width: 150, frozen: true },
   { key: 'message', name: 'Message' },
-];
+].map((c) => ({ ...c, ...commonColumnProperties }));
 
 const Panel = () => {
   const [capturing, setCapturing] = useState(false);
@@ -67,6 +73,9 @@ const Panel = () => {
             message: msg.msg,
           };
         })}
+        rowKeyGetter={row => row.id}
+        headerRowHeight={30}
+        rowHeight={20}
       />
     </div>
   );
