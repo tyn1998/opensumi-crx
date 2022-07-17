@@ -53,7 +53,7 @@ const Panel = () => {
   };
 
   return (
-    <div className="container">
+    <div>
       <button onClick={start}>startCapturing</button>
       <button onClick={stop}>stopCapturing</button>
       <p>{capturing ? 'capturing' : 'not capturing'}</p>
