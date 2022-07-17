@@ -21,20 +21,24 @@ const MessagesTab = () => {
   const [messages, setMessages] = useState([]);
   const [timer, setTimer] = useState(null);
   const [bottomRow, setBottomRow] = useState(-1);
+  const [autoScroll, setAutoScroll] = useState(true);
 
   const gridRef = useRef(null);
 
   useEffect(() => {
-    gridRef.current && gridRef.current.scrollToRow(bottomRow);
-  }, [bottomRow]);
+    gridRef.current && autoScroll && gridRef.current.scrollToRow(bottomRow);
+  }, [autoScroll, bottomRow]);
+
+  const toggleAutoScroll = () => {
+    setAutoScroll(!autoScroll);
+  };
 
   const addMessages = () => {
     getMessages()
       .then((newMessages) => {
-        setMessages(oldMessages => [...oldMessages, ...newMessages]);
+        setMessages((oldMessages) => [...oldMessages, ...newMessages]);
         if (newMessages.length > 0) {
-          console.log(messages.length);
-          setBottomRow(oldBottomRow => oldBottomRow + newMessages.length);
+          setBottomRow((oldBottomRow) => oldBottomRow + newMessages.length);
         }
       })
       .catch((error) => {
@@ -73,6 +77,7 @@ const MessagesTab = () => {
       <button onClick={start}>startCapturing</button>
       <button onClick={stop}>stopCapturing</button>
       <p>{capturing ? 'capturing' : 'not capturing'}</p>
+      <button onClick={toggleAutoScroll}>toggleAutoScroll</button>
 
       <DataGrid
         ref={gridRef}
