@@ -261,7 +261,7 @@ const MessagesTab = () => {
       </div>
       <FilterContext.Provider value={filters}>
         <DataGrid
-          className={filters.enabled ? 'filter-container' : undefined}
+          className={`rdg-light ${filters.enabled ? 'filter-container' : undefined}`}
           style={{ fontSize: '10px', height: 'calc(100vh - 40px' }}
           ref={gridRef}
           columns={columns}
