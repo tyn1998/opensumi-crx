@@ -45,6 +45,27 @@ const generateColumns = (FilterContext, setFilters, services, methods) => {
       minWidth: 40,
       width: 50,
       // frozen: true,
+      headerCellClass: 'filter-cell',
+      headerRenderer: (p) => (
+        <FilterRenderer {...p}>
+          {({ filters, ...rest }) => (
+            <select
+              {...rest}
+              className="filter"
+              value={filters.type}
+              onChange={(e) => {
+                setFilters({ ...filters, type: e.target.value });
+              }}
+            >
+              <option value="">All</option>
+              <option value="↑">↑</option>
+              <option value="↓">↓</option>
+              <option value="↑↓">↑↓</option>
+              <option value="↓↑">↓↑</option>
+            </select>
+          )}
+        </FilterRenderer>
+      ),
     },
     {
       key: 'service',
@@ -62,7 +83,6 @@ const generateColumns = (FilterContext, setFilters, services, methods) => {
               onChange={(e) => {
                 setFilters({ ...filters, service: e.target.value });
               }}
-              onKeyDown={inputStopPropagation}
             >
               <option value="">All</option>
               {Array.from(services)
@@ -93,7 +113,6 @@ const generateColumns = (FilterContext, setFilters, services, methods) => {
               onChange={(e) => {
                 setFilters({ ...filters, method: e.target.value });
               }}
-              onKeyDown={inputStopPropagation}
             >
               <option value="">All</option>
               {Array.from(methods)

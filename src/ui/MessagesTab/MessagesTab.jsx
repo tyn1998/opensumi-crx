@@ -63,12 +63,11 @@ const MessagesTab = () => {
       })
       .filter((r) => {
         return (
+          (filters.type ? r.type && r.type === filters.type : true) &&
           (filters.service
-            ? r.service && r.service.includes(filters.service)
+            ? r.service && r.service === filters.service
             : true) &&
-          (filters.method
-            ? r.method && r.method.includes(filters.method)
-            : true) &&
+          (filters.method ? r.method && r.method === filters.method : true) &&
           (filters.send ? r.send && r.send.includes(filters.send) : true) &&
           (filters.receive
             ? r.receive && r.receive.includes(filters.receive)
@@ -158,6 +157,7 @@ const MessagesTab = () => {
 
   const clearFilters = () => {
     setFilters({
+      type: '',
       service: '',
       method: '',
       send: '',
