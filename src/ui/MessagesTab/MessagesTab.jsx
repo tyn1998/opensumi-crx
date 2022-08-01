@@ -4,35 +4,16 @@ import React, {
   useRef,
   useMemo,
   createContext,
-  useContext,
 } from 'react';
 import DataGrid from 'react-data-grid';
 import { startCapturing, stopCapturing, getMessages } from '../../capturer';
-import { useFocusRef } from './useFocusRef';
 import { updateMessages } from './messagesHelper';
+import { generateColumns } from './columnsHelper';
 import './MessagesTab.scss';
 
 const INTERVAL = 500;
 
-const inputStopPropagation = (event) => {
-  if (['ArrowLeft', 'ArrowRight'].includes(event.key)) {
-    event.stopPropagation();
-  }
-};
-
 const FilterContext = createContext(undefined);
-
-const FilterRenderer = ({ isCellSelected, column, children }) => {
-  const filters = useContext(FilterContext);
-  const { ref, tabIndex } = useFocusRef(isCellSelected);
-
-  return (
-    <>
-      <div>{column.name}</div>
-      {filters.enabled && <div>{children({ ref, tabIndex, filters })}</div>}
-    </>
-  );
-};
 
 const MessagesTab = () => {
   const [capturing, setCapturing] = useState(false);
@@ -70,140 +51,9 @@ const MessagesTab = () => {
     setMethods(Array.from(methodsRef.current));
   }
 
-  const commonColumnProperties = useMemo(
-    () => ({
-      resizable: true,
-    }),
-    []
-  );
-
   const columns = useMemo(() => {
-    return [
-      {
-        key: 'id',
-        name: 'ID',
-        minWidth: 40,
-        width: 50,
-        // frozen: true,
-      },
-      {
-        key: 'time',
-        name: 'Time',
-        minWidth: 75,
-        width: 75,
-        // frozen: true,
-      },
-      {
-        key: 'type',
-        name: 'Type',
-        minWidth: 40,
-        width: 50,
-        // frozen: true,
-      },
-      {
-        key: 'service',
-        name: 'Service',
-        width: 100,
-        // frozen: true,
-        headerCellClass: 'filter-cell',
-        headerRenderer: (p) => (
-          <FilterRenderer {...p}>
-            {({ filters, ...rest }) => (
-              <select
-                {...rest}
-                className="filter"
-                value={filters.service}
-                onChange={(e) => {
-                  setFilters({ ...filters, service: e.target.value });
-                }}
-                onKeyDown={inputStopPropagation}
-              >
-                <option value="">All</option>
-                {Array.from(services)
-                  .sort()
-                  .map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-              </select>
-            )}
-          </FilterRenderer>
-        ),
-      },
-      {
-        key: 'method',
-        name: 'Method',
-        width: 100,
-        // frozen: true,
-        headerCellClass: 'filter-cell',
-        headerRenderer: (p) => (
-          <FilterRenderer {...p}>
-            {({ filters, ...rest }) => (
-              <select
-                {...rest}
-                className="filter"
-                value={filters.method}
-                onChange={(e) => {
-                  setFilters({ ...filters, method: e.target.value });
-                }}
-                onKeyDown={inputStopPropagation}
-              >
-                <option value="">All</option>
-                {Array.from(methods)
-                  .sort()
-                  .map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-              </select>
-            )}
-          </FilterRenderer>
-        ),
-      },
-      {
-        key: 'send',
-        name: 'Send',
-        headerCellClass: 'filter-cell',
-        headerRenderer: (p) => (
-          <FilterRenderer {...p}>
-            {({ filters, ...rest }) => (
-              <input
-                {...rest}
-                className="filter"
-                value={filters.send}
-                onChange={(e) => {
-                  setFilters({ ...filters, send: e.target.value });
-                }}
-                onKeyDown={inputStopPropagation}
-              />
-            )}
-          </FilterRenderer>
-        ),
-      },
-      {
-        key: 'receive',
-        name: 'Receive',
-        headerCellClass: 'filter-cell',
-        headerRenderer: (p) => (
-          <FilterRenderer {...p}>
-            {({ filters, ...rest }) => (
-              <input
-                {...rest}
-                className="filter"
-                value={filters.receive}
-                onChange={(e) => {
-                  setFilters({ ...filters, receive: e.target.value });
-                }}
-                onKeyDown={inputStopPropagation}
-              />
-            )}
-          </FilterRenderer>
-        ),
-      },
-    ].map((c) => ({ ...c, ...commonColumnProperties }));
-  }, [commonColumnProperties, services, methods]);
+    return generateColumns(FilterContext, setFilters, services, methods);
+  }, [setFilters, services, methods]);
 
   const filteredRows = useMemo(() => {
     return messages
