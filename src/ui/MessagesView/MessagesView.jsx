@@ -7,10 +7,14 @@ import React, {
 } from 'react';
 import ResizableTable from './ResizableTable';
 import DataGrid from 'react-data-grid';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+import JsonView from 'react-json-view';
 import { startCapturing, stopCapturing, getMessages } from '../../capturer';
-import { updateMessages } from './messagesHelper';
+import { updateMessages, getParsedMessage } from './messagesHelper';
 import { generateColumns } from './columnsHelper';
 import './MessagesView.scss';
+import { createStringLiteral } from 'typescript';
 
 const INTERVAL = 500;
 
@@ -31,6 +35,7 @@ const MessagesView = () => {
   });
   const [services, setServices] = useState([]); // all kinds of services in messages
   const [methods, setMethods] = useState([]); // all kinds of methods in messages
+  const [selectedRow, setSelectedRow] = useState();
 
   const timer = useRef(null);
   const gridRef = useRef(null);
@@ -213,9 +218,40 @@ const MessagesView = () => {
             rowKeyGetter={(row) => row.id}
             headerRowHeight={filters.enabled ? 52 : 25}
             rowHeight={20}
+            onRowClick={(row) => {
+              setSelectedRow(row);
+            }}
           />
         </FilterContext.Provider>
-        <div>xxx</div>
+        <Tabs
+          forceRenderTabPanel={true}
+          style={{ height: 'calc(100vh - 42px)', overflow: 'auto' }}
+        >
+          <TabList>
+            <Tab>Send</Tab>
+            <Tab>Receive</Tab>
+          </TabList>
+
+          <TabPanel>
+            <JsonView
+              className="json-view"
+              src={getParsedMessage(selectedRow, 'send')}
+              name={false}
+              collapsed={1}
+              displayDataTypes={false}
+              enableClipboard={false}
+            />
+          </TabPanel>
+          <TabPanel>
+            <JsonView
+              src={getParsedMessage(selectedRow, 'receive')}
+              name={false}
+              collapsed={1}
+              displayDataTypes={false}
+              enableClipboard={false}
+            />
+          </TabPanel>
+        </Tabs>
       </ResizableTable>
     </div>
   );
