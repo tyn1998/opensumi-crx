@@ -5,6 +5,7 @@ import React, {
   useMemo,
   createContext,
 } from 'react';
+import ResizableTable from './ResizableTable';
 import DataGrid from 'react-data-grid';
 import { startCapturing, stopCapturing, getMessages } from '../../capturer';
 import { updateMessages } from './messagesHelper';
@@ -199,20 +200,23 @@ const MessagesTab = () => {
           Reset Filters
         </button>
       </div>
-      <FilterContext.Provider value={filters}>
-        <DataGrid
-          className={`rdg-light ${
-            filters.enabled ? 'filter-container' : undefined
-          }`}
-          style={{ fontSize: '10px', height: 'calc(100vh - 40px' }}
-          ref={gridRef}
-          columns={columns}
-          rows={filteredRows}
-          rowKeyGetter={(row) => row.id}
-          headerRowHeight={filters.enabled ? 52 : 25}
-          rowHeight={20}
-        />
-      </FilterContext.Provider>
+      <ResizableTable minCellWidth={300}>
+        <FilterContext.Provider value={filters}>
+          <DataGrid
+            className={`rdg-light ${
+              filters.enabled ? 'filter-container' : undefined
+            }`}
+            style={{ fontSize: '10px', height: 'calc(100vh - 42px)' }}
+            ref={gridRef}
+            columns={columns}
+            rows={filteredRows}
+            rowKeyGetter={(row) => row.id}
+            headerRowHeight={filters.enabled ? 52 : 25}
+            rowHeight={20}
+          />
+        </FilterContext.Provider>
+        <div>xxx</div>
+      </ResizableTable>
     </div>
   );
 };
