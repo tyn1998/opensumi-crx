@@ -10,13 +10,13 @@ import DataGrid from 'react-data-grid';
 import { startCapturing, stopCapturing, getMessages } from '../../capturer';
 import { updateMessages } from './messagesHelper';
 import { generateColumns } from './columnsHelper';
-import './MessagesTab.scss';
+import './MessagesView.scss';
 
 const INTERVAL = 500;
 
 const FilterContext = createContext(undefined);
 
-const MessagesTab = () => {
+const MessagesView = () => {
   const [capturing, setCapturing] = useState(false);
   const [messages, setMessages] = useState([]);
   const [bottomRow, setBottomRow] = useState(-1);
@@ -221,4 +221,4 @@ const MessagesTab = () => {
   );
 };
 
-export default MessagesTab;
+export default MessagesView;

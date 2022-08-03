@@ -1,11 +1,10 @@
 import React from 'react';
-import './Panel.css';
 // import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
-import MessagesTab from './MessagesTab/MessagesTab';
+// import 'react-tabs/style/react-tabs.css';
+import MessagesView from './MessagesView/MessagesView';
 
 const Panel = () => {
-  return <MessagesTab />;
+  return <MessagesView />;
 
   // return (
   //   <Tabs forceRenderTabPanel={true}>
