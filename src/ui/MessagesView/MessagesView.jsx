@@ -223,10 +223,7 @@ const MessagesView = () => {
             }}
           />
         </FilterContext.Provider>
-        <Tabs
-          forceRenderTabPanel={true}
-          style={{ height: 'calc(100vh - 42px)', overflow: 'auto' }}
-        >
+        <Tabs forceRenderTabPanel={true}>
           <TabList>
             <Tab>Send</Tab>
             <Tab>Receive</Tab>
@@ -234,7 +231,7 @@ const MessagesView = () => {
 
           <TabPanel>
             <JsonView
-              className="json-view"
+              style={{ height: 'calc(100vh - 82px)', overflow: 'auto' }}
               src={getParsedMessage(selectedRow, 'send')}
               name={false}
               collapsed={1}
@@ -244,6 +241,7 @@ const MessagesView = () => {
           </TabPanel>
           <TabPanel>
             <JsonView
+              style={{ height: 'calc(100vh - 82px)', overflow: 'auto' }}
               src={getParsedMessage(selectedRow, 'receive')}
               name={false}
               collapsed={1}
