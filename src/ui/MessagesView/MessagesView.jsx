@@ -14,7 +14,6 @@ import { startCapturing, stopCapturing, getMessages } from '../../capturer';
 import { updateMessages, getParsedMessage } from './messagesHelper';
 import { generateColumns } from './columnsHelper';
 import './MessagesView.scss';
-import { createStringLiteral } from 'typescript';
 
 const INTERVAL = 500;
 
@@ -36,6 +35,8 @@ const MessagesView = () => {
   const [services, setServices] = useState([]); // all kinds of services in messages
   const [methods, setMethods] = useState([]); // all kinds of methods in messages
   const [selectedRow, setSelectedRow] = useState();
+  const [shouldParseExtProtocol, setShouldParseExtProtocol] = useState(false);
+  const [collapsed, setCollapsed] = useState(1);
 
   const timer = useRef(null);
   const gridRef = useRef(null);
@@ -46,6 +47,11 @@ const MessagesView = () => {
   useEffect(() => {
     gridRef.current && autoScroll && gridRef.current.scrollToRow(bottomRow);
   }, [autoScroll, bottomRow]);
+
+  // reset JsonView's collapsed to 1 when selected row change
+  useEffect(() => {
+    setCollapsed(1);
+  }, [selectedRow]);
 
   // it is not very elegent to use two variables to store same thing
   // but can prevent unnecessary render that will disrupt users when
@@ -172,9 +178,13 @@ const MessagesView = () => {
     });
   };
 
+  const toggleShouldParseExtProtocol = () => {
+    setShouldParseExtProtocol(!shouldParseExtProtocol);
+  };
+
   return (
     <div>
-      <div className="toolbar">
+      <div className="toolbar" style={{ marginBottom: '5px' }}>
         <button
           className={`toolbar-button ${capturing ? 'active' : ''}`}
           onClick={toggleCapturing}
@@ -223,33 +233,80 @@ const MessagesView = () => {
             }}
           />
         </FilterContext.Provider>
-        <Tabs forceRenderTabPanel={true}>
-          <TabList>
-            <Tab>Send</Tab>
-            <Tab>Receive</Tab>
-          </TabList>
+        <div>
+          <Tabs forceRenderTabPanel={true}>
+            <TabList>
+              <Tab>Send</Tab>
+              <Tab>Receive</Tab>
+            </TabList>
 
-          <TabPanel>
-            <JsonView
-              style={{ height: 'calc(100vh - 82px)', overflow: 'auto' }}
-              src={getParsedMessage(selectedRow, 'send')}
-              name={false}
-              collapsed={1}
-              displayDataTypes={false}
-              enableClipboard={false}
-            />
-          </TabPanel>
-          <TabPanel>
-            <JsonView
-              style={{ height: 'calc(100vh - 82px)', overflow: 'auto' }}
-              src={getParsedMessage(selectedRow, 'receive')}
-              name={false}
-              collapsed={1}
-              displayDataTypes={false}
-              enableClipboard={false}
-            />
-          </TabPanel>
-        </Tabs>
+            <TabPanel>
+              <JsonView
+                style={{
+                  height: 'calc(100vh - 102px)',
+                  overflow: 'auto',
+                }}
+                src={getParsedMessage(
+                  selectedRow,
+                  'send',
+                  shouldParseExtProtocol
+                )}
+                name={false}
+                collapsed={collapsed}
+                displayDataTypes={false}
+                enableClipboard={false}
+              />
+            </TabPanel>
+            <TabPanel>
+              <JsonView
+                style={{
+                  height: 'calc(100vh - 102px)',
+                  overflow: 'auto',
+                }}
+                src={getParsedMessage(
+                  selectedRow,
+                  'receive',
+                  shouldParseExtProtocol
+                )}
+                name={false}
+                collapsed={collapsed}
+                displayDataTypes={false}
+                enableClipboard={false}
+              />
+            </TabPanel>
+          </Tabs>
+          <div className="toolbar">
+            <button
+              className="toolbar-button"
+              onClick={() => {
+                setCollapsed(false);
+              }}
+            >
+              <span className="toolbar-icon icon-expand-all"></span>
+              Expand
+            </button>
+            <button
+              className="toolbar-button"
+              onClick={() => {
+                setCollapsed(true);
+              }}
+            >
+              <span className="toolbar-icon icon-collapse-all"></span>
+              Collapse
+            </button>
+            {selectedRow && selectedRow.service === 'ExtProtocol' ? (
+              <button
+                className={`toolbar-button ${
+                  shouldParseExtProtocol ? 'active' : ''
+                }`}
+                onClick={toggleShouldParseExtProtocol}
+              >
+                <span className="toolbar-icon icon-bracket"></span>
+                Parse ExtProtocol
+              </button>
+            ) : null}
+          </div>
+        </div>
       </ResizableTable>
     </div>
   );

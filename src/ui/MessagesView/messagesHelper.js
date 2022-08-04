@@ -140,14 +140,14 @@ const updateMessages = (oldMessages, newRawMessages) => {
   };
 };
 
-const getParsedMessage = (row, sendOrReceive) => {
+const getParsedMessage = (row, sendOrReceive, shouldParseExtProtocol) => {
   if (!row) return undefined;
   if (!row[sendOrReceive]) return undefined;
 
   let parsed = JSON.parse(row[sendOrReceive]);
-  // if (row.service === 'ExtProtocol') {
-  //   parsed = JSON.parse(parsed);
-  // }
+  if (row.service === 'ExtProtocol' && shouldParseExtProtocol) {
+    parsed = JSON.parse(parsed);
+  }
   if (typeof parsed !== 'object') {
     parsed = {
       '': parsed,
