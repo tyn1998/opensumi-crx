@@ -27,13 +27,13 @@ const updateMessages = (oldMessages, newRawMessages) => {
       msg.type = '↑';
       msg.service = serviceMethodSplitResult[0];
       msg.method = serviceMethodSplitResult[1];
-      msg.send = JSON.stringify(...message.arguments);
+      msg.send = JSON.stringify(message.arguments);
     } else if (msg.type === 'sendRequest') {
       msg.type = '↑↓';
       msg.requestId = message.requestId;
       msg.service = serviceMethodSplitResult[0];
       msg.method = serviceMethodSplitResult[1];
-      msg.send = JSON.stringify(...message.arguments);
+      msg.send = JSON.stringify(message.arguments);
     } else if (msg.type === 'requestResult') {
       msg.type = '↑↓';
       msg.requestId = message.requestId;
@@ -47,13 +47,13 @@ const updateMessages = (oldMessages, newRawMessages) => {
       msg.type = '↓';
       msg.service = serviceMethodSplitResult[0];
       msg.method = serviceMethodSplitResult[1];
-      msg.receive = JSON.stringify(...message.arguments);
+      msg.receive = JSON.stringify(message.arguments);
     } else if (msg.type === 'onRequest') {
       msg.type = '↓↑';
       msg.requestId = message.requestId;
       msg.service = serviceMethodSplitResult[0];
       msg.method = serviceMethodSplitResult[1];
-      msg.receive = JSON.stringify(...message.arguments);
+      msg.receive = JSON.stringify(message.arguments);
     } else if (msg.type === 'onRequestResult') {
       msg.type = '↓↑';
       msg.requestId = message.requestId;
@@ -145,12 +145,12 @@ const getParsedMessage = (row, sendOrReceive) => {
   if (!row[sendOrReceive]) return undefined;
 
   let parsed = JSON.parse(row[sendOrReceive]);
-  if (row.service === 'ExtProtocol') {
-    parsed = JSON.parse(parsed);
-  }
+  // if (row.service === 'ExtProtocol') {
+  //   parsed = JSON.parse(parsed);
+  // }
   if (typeof parsed !== 'object') {
     parsed = {
-      "": parsed,
+      '': parsed,
     };
   }
   return parsed;
