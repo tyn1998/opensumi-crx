@@ -301,7 +301,7 @@ const MessagesView = () => {
                 }`}
                 onClick={toggleShouldParseExtProtocol}
               >
-                <span className="toolbar-icon icon-bracket"></span>
+                <span className="toolbar-icon icon-braces"></span>
                 Parse ExtProtocol
               </button>
             ) : null}
