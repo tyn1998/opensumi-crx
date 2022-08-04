@@ -1,46 +1,27 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './ResizableTable.scss';
 
-const createHeaders = (children) => {
-  return children.map((child) => ({
-    child,
-    ref: useRef(),
-  }));
-};
-
-const ResizableTable = ({ children, minCellWidth }) => {
+const ResizableTable = ({ children }) => {
   const [tableHeight, setTableHeight] = useState('auto');
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [handleStatus, setHandleStatus] = useState('idle');
   const tableElement = useRef(null);
-  const columns = createHeaders(children);
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
 
   useEffect(() => {
     setTableHeight(tableElement.current.offsetHeight);
   }, []);
 
-  const mouseDown = (index) => {
-    setActiveIndex(index);
+  const mouseDown = () => {
+    setHandleStatus('active');
   };
 
-  const mouseMove = useCallback(
-    (e) => {
-      const gridColumns = columns.map((col, i) => {
-        if (i === activeIndex) {
-          const width = e.clientX - col.ref.current.offsetLeft;
-
-          if (width >= minCellWidth) {
-            return `${width}px`;
-          }
-        }
-        return `${col.ref.current.offsetWidth}px`;
-      });
-
-      tableElement.current.style.gridTemplateColumns = `${gridColumns.join(
-        ' '
-      )}`;
-    },
-    [activeIndex, columns, minCellWidth]
-  );
+  const mouseMove = useCallback((e) => {
+    const col1Width = e.clientX - ref1.current.offsetLeft;
+    const col2Width =
+      ref1.current.offsetWidth + ref2.current.offsetWidth - col1Width;
+    tableElement.current.style.gridTemplateColumns = `${col1Width}px ${col2Width}px`;
+  }, []);
 
   const removeListeners = useCallback(() => {
     window.removeEventListener('mousemove', mouseMove);
@@ -48,12 +29,12 @@ const ResizableTable = ({ children, minCellWidth }) => {
   }, [mouseMove]);
 
   const mouseUp = useCallback(() => {
-    setActiveIndex(null);
+    setHandleStatus('idle');
     removeListeners();
-  }, [setActiveIndex, removeListeners]);
+  }, [setHandleStatus, removeListeners]);
 
   useEffect(() => {
-    if (activeIndex !== null) {
+    if (handleStatus === 'active') {
       window.addEventListener('mousemove', mouseMove);
       window.addEventListener('mouseup', mouseUp);
     }
@@ -61,26 +42,21 @@ const ResizableTable = ({ children, minCellWidth }) => {
     return () => {
       removeListeners();
     };
-  }, [activeIndex, mouseMove, mouseUp, removeListeners]);
-
-  // const resetTableCells = () => {
-  //   tableElement.current.style.gridTemplateColumns = "";
-  // };
+  }, [handleStatus, mouseMove, mouseUp, removeListeners]);
 
   return (
     <table className="rt-table" ref={tableElement}>
       <thead>
         <tr>
-          {columns.map(({ ref, child }, i) => (
-            <td ref={ref} key={`rt-column-${i}`}>
-              {child}
-              <div
-                style={{ height: tableHeight }}
-                onMouseDown={() => mouseDown(i)}
-                className={`rt-handle ${activeIndex === i ? 'active' : 'idle'}`}
-              />
-            </td>
-          ))}
+          <td ref={ref1}>
+            {children[0]}
+            <div
+              style={{ height: tableHeight }}
+              onMouseDown={() => mouseDown()}
+              className={`rt-handle ${handleStatus}`}
+            />
+          </td>
+          <td ref={ref2}>{children[1]}</td>
         </tr>
       </thead>
     </table>

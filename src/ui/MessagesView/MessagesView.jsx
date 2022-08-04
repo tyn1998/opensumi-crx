@@ -205,7 +205,7 @@ const MessagesView = () => {
           Reset Filters
         </button>
       </div>
-      <ResizableTable minCellWidth={300}>
+      <ResizableTable>
         <FilterContext.Provider value={filters}>
           <DataGrid
             className={`rdg-light ${
