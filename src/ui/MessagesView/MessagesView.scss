@@ -106,6 +106,14 @@
   background-position: center center;
 }
 
+div[role='columnheader'].rdg-cell {
+  font-weight: normal;
+}
+
+div[role='gridcell'].rdg-cell {
+  font-family: monospace;
+}
+
 .filter-container {
   .filter {
     inline-size: 100%;
