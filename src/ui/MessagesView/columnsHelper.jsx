@@ -43,6 +43,7 @@ const generateColumns = (FilterContext, setFilters, services, methods) => {
       name: 'Type',
       minWidth: 40,
       width: 50,
+      cellClass: 'rdg-column-type',
       headerCellClass: 'filter-cell',
       headerRenderer: (p) => (
         <FilterRenderer {...p}>
