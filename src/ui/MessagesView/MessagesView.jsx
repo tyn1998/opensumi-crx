@@ -243,7 +243,7 @@ const MessagesView = () => {
             <TabPanel>
               <JsonView
                 style={{
-                  height: 'calc(100vh - 102px)',
+                  height: 'calc(100vh - 96px)',
                   overflow: 'auto',
                 }}
                 src={getParsedMessage(
@@ -260,7 +260,7 @@ const MessagesView = () => {
             <TabPanel>
               <JsonView
                 style={{
-                  height: 'calc(100vh - 102px)',
+                  height: 'calc(100vh - 96px)',
                   overflow: 'auto',
                 }}
                 src={getParsedMessage(
