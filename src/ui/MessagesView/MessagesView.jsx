@@ -37,6 +37,10 @@ const MessagesView = () => {
   const [selectedRow, setSelectedRow] = useState();
   const [shouldParseExtProtocol, setShouldParseExtProtocol] = useState(false);
   const [collapsed, setCollapsed] = useState(1);
+  const [netspeed, setNetspeed] = useState({
+    send: 0, // the unit is bytes/s
+    receive: 0,
+  });
 
   const timer = useRef(null);
   const gridRef = useRef(null);
@@ -92,16 +96,18 @@ const MessagesView = () => {
     getMessages()
       .then((newRawMessages) => {
         let newMsgs = [];
+        let newSendBytes = 0;
+        let newReceiveBytes = 0;
 
         // since addMessages is called from setInterval, if we read messages
         // directly we will always get an empty array. use setMessages to get
         // the latest messages (oldMessages) instead.
         setMessages((oldMessages) => {
-          const { updatedMessages, newMessages } = updateMessages(
-            oldMessages,
-            newRawMessages
-          );
+          const { updatedMessages, newMessages, sendBytes, receiveBytes } =
+            updateMessages(oldMessages, newRawMessages);
           newMsgs = newMessages;
+          newSendBytes = sendBytes;
+          newReceiveBytes = receiveBytes;
           return [...updatedMessages, ...newMessages];
         });
 
@@ -115,6 +121,12 @@ const MessagesView = () => {
           // for auto scroll
           setBottomRow((oldBottomRow) => oldBottomRow + newMsgs.length);
         }
+
+        // caculate net speed
+        setNetspeed({
+          send: newSendBytes / (INTERVAL / 1000),
+          receive: newReceiveBytes / (INTERVAL / 1000),
+        });
       })
       .catch((error) => {
         console.error('Getting messages failed!');
@@ -214,6 +226,8 @@ const MessagesView = () => {
           <span className="toolbar-icon icon-reset"></span>
           Reset Filters
         </button>
+        <button className="toolbar-button">{netspeed.send} B/s</button>
+        <button className="toolbar-button">{netspeed.receive} B/s</button>
       </div>
       <ResizableTable>
         <FilterContext.Provider value={filters}>
