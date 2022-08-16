@@ -14,6 +14,7 @@ import { startCapturing, stopCapturing, getMessages } from '../../capturer';
 import { updateMessages, getParsedMessage } from './messagesHelper';
 import { generateColumns } from './columnsHelper';
 import './MessagesView.scss';
+import NetSpeedView from './NetSpeedView';
 
 const INTERVAL = 500;
 
@@ -150,6 +151,10 @@ const MessagesView = () => {
           setCapturing(false);
           clearInterval(timer.current);
           timer.current = null;
+          setNetspeed({
+            send: 0,
+            receive: 0,
+          });
         })
         .catch((error) => {
           console.error('Stoping capturing failed!');
@@ -196,38 +201,41 @@ const MessagesView = () => {
 
   return (
     <div>
-      <div className="toolbar">
-        <button
-          className={`toolbar-button ${capturing ? 'active' : ''}`}
-          onClick={toggleCapturing}
-        >
-          <span className="toolbar-icon icon-record"></span>
-          Capture
-        </button>
-        <button className="toolbar-button" onClick={clearMessages}>
-          <span className="toolbar-icon icon-clear"></span>
-          Clear
-        </button>
-        <button
-          className={`toolbar-button ${autoScroll ? 'active' : ''}`}
-          onClick={toggleAutoScroll}
-        >
-          <span className="toolbar-icon icon-bottom"></span>
-          Scroll
-        </button>
-        <button
-          className={`toolbar-button ${filters.enabled ? 'active' : ''}`}
-          onClick={toggleFilters}
-        >
-          <span className="toolbar-icon icon-filter"></span>
-          Filters
-        </button>
-        <button className="toolbar-button" onClick={clearFilters}>
-          <span className="toolbar-icon icon-reset"></span>
-          Reset Filters
-        </button>
-        <button className="toolbar-button">{netspeed.send} B/s</button>
-        <button className="toolbar-button">{netspeed.receive} B/s</button>
+      <div className="statbar">
+        <div className="toolbar">
+          <button
+            className={`toolbar-button ${capturing ? 'active' : ''}`}
+            onClick={toggleCapturing}
+          >
+            <span className="toolbar-icon icon-record"></span>
+            Capture
+          </button>
+          <button className="toolbar-button" onClick={clearMessages}>
+            <span className="toolbar-icon icon-clear"></span>
+            Clear
+          </button>
+          <button
+            className={`toolbar-button ${autoScroll ? 'active' : ''}`}
+            onClick={toggleAutoScroll}
+          >
+            <span className="toolbar-icon icon-bottom"></span>
+            Scroll
+          </button>
+          <button
+            className={`toolbar-button ${filters.enabled ? 'active' : ''}`}
+            onClick={toggleFilters}
+          >
+            <span className="toolbar-icon icon-filter"></span>
+            Filters
+          </button>
+          <button className="toolbar-button" onClick={clearFilters}>
+            <span className="toolbar-icon icon-reset"></span>
+            Reset Filters
+          </button>
+        </div>
+        <div className="netbar">
+          <NetSpeedView capturing={capturing} upload={netspeed.send} download={netspeed.receive} />
+        </div>
       </div>
       <ResizableTable>
         <FilterContext.Provider value={filters}>
@@ -257,8 +265,9 @@ const MessagesView = () => {
             <TabPanel>
               <JsonView
                 style={{
-                  height: 'calc(100vh - 96px)',
+                  height: 'calc(100vh - 92px)',
                   overflow: 'auto',
+                  fontSize: '12px',
                 }}
                 src={getParsedMessage(
                   selectedRow,
@@ -274,8 +283,9 @@ const MessagesView = () => {
             <TabPanel>
               <JsonView
                 style={{
-                  height: 'calc(100vh - 96px)',
+                  height: 'calc(100vh - 92px)',
                   overflow: 'auto',
+                  fontSize: '12px',
                 }}
                 src={getParsedMessage(
                   selectedRow,
