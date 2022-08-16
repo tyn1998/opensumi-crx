@@ -136,6 +136,7 @@ const MessagesView = () => {
     setMethods([]);
     servicesRef.current.clear();
     methodsRef.current.clear();
+    setSelectedRow(null);
   };
 
   const toggleCapturing = () => {
