@@ -151,15 +151,6 @@ const MessagesView = () => {
         console.error('Getting messages failed!');
         console.error(error.stack || error);
       });
-
-    getLatency()
-      .then((latency) => {
-        setLatency(latency);
-      })
-      .catch((error) => {
-        console.error('Getting latency failed!');
-        console.error(error.stack || error);
-      });
   };
 
   const clearMessages = () => {
@@ -170,6 +161,17 @@ const MessagesView = () => {
     servicesRef.current.clear();
     methodsRef.current.clear();
     setSelectedRow(null);
+  };
+
+  const updateLatency = () => {
+    getLatency()
+      .then((latency) => {
+        setLatency(latency);
+      })
+      .catch((error) => {
+        console.error('Getting latency failed!');
+        console.error(error.stack || error);
+      });
   };
 
   const toggleCapturing = () => {
@@ -193,7 +195,10 @@ const MessagesView = () => {
       startCapturing()
         .then(() => {
           setCapturing(true);
-          timer.current = setInterval(() => addMessages(), INTERVAL);
+          timer.current = setInterval(() => {
+            addMessages();
+            updateLatency();
+          }, INTERVAL);
         })
         .catch((error) => {
           console.error('Starting capturing failed!');
