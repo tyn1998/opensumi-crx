@@ -15,6 +15,7 @@ const updateMessages = (oldMessages, newRawMessages) => {
   const updatedMessages = oldMessages.concat();
 
   for (const message of newRawMessages) {
+    // ignore rtt messages
     if (message.serviceMethod === 'ConnectionBackServicePath:$measure') {
       continue;
     }
