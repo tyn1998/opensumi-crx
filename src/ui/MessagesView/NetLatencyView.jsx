@@ -4,7 +4,7 @@ import './NetLatencyView.scss';
 const NetLatencyView = ({ capturing, latency }) => {
   if (!capturing) return null;
 
-  if (!latency) {
+  if (latency === null || typeof latency === 'undefined') {
     latency = '-·-';
   } else if (latency > 999) {
     latency = '999+';

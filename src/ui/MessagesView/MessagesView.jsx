@@ -48,7 +48,7 @@ const MessagesView = () => {
     send: 0, // the unit is bytes/s
     receive: 0,
   });
-  const [latency, setLatency] = useState();
+  const [latency, setLatency] = useState(null);
   const [isCompact, setIsCompact] = useState(false);
 
   const timer = useRef(null);
