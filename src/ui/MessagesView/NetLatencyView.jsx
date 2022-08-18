@@ -4,10 +4,16 @@ import './NetLatencyView.scss';
 const NetLatencyView = ({ capturing, latency }) => {
   if (!capturing) return null;
 
+  if (!latency) {
+    latency = '-·-';
+  } else if (latency > 999) {
+    latency = '999+';
+  }
+
   return (
     <div className="netlatency">
       <div>
-        <span>{latency > 999 ? '999+' : latency}</span>
+        <span>{latency}</span>
       </div>
       <div>
         <span>ms</span>

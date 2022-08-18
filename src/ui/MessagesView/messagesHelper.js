@@ -14,7 +14,11 @@ const updateMessages = (oldMessages, newRawMessages) => {
   // the corresponding sendRequest/onRequest row should be updated
   const updatedMessages = oldMessages.concat();
 
-  newRawMessages.forEach((message) => {
+  for (const message of newRawMessages) {
+    if (message.serviceMethod === 'ConnectionBackServicePath:$measure') {
+      continue;
+    }
+
     const msg = {
       time: message.time,
       type: message.type,
@@ -143,7 +147,7 @@ const updateMessages = (oldMessages, newRawMessages) => {
     } else {
       newMessages.push(msg);
     }
-  });
+  }
 
   return {
     updatedMessages,
