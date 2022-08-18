@@ -14,15 +14,16 @@ import { startCapturing, stopCapturing, getMessages } from '../../capturer';
 import { updateMessages, getParsedMessage } from './messagesHelper';
 import { generateColumns } from './columnsHelper';
 import './MessagesView.scss';
-import NetSpeedView from './NetSpeedView';
 import NoMessageSelectedView from './NoMessageSelectedView';
+import NetSpeedView from './NetSpeedView';
+import NetLatencyView from './NetLatencyView';
 
 const INTERVAL = 500;
 
 const FilterContext = createContext(undefined);
 
 const MessagesView = () => {
-  const [capturing, setCapturing] = useState(false);
+  const [capturing, setCapturing] = useState(true);
   const [messages, setMessages] = useState([]);
   const [bottomRow, setBottomRow] = useState(-1);
   const [autoScroll, setAutoScroll] = useState(true);
@@ -247,7 +248,9 @@ const MessagesView = () => {
           </button>
           <button className="toolbar-button" onClick={clearFilters}>
             <span className="toolbar-icon icon-reset"></span>
-            {isCompact ? null : <span className="toolbar-text">Reset Filters</span>}
+            {isCompact ? null : (
+              <span className="toolbar-text">Reset Filters</span>
+            )}
           </button>
           <button
             className={`toolbar-button ${
@@ -256,7 +259,9 @@ const MessagesView = () => {
             onClick={toggleShouldParseExtProtocol}
           >
             <span className="toolbar-icon icon-braces"></span>
-            {isCompact ? null : <span className="toolbar-text">Parse ExtProtocol</span>}
+            {isCompact ? null : (
+              <span className="toolbar-text">Parse ExtProtocol</span>
+            )}
           </button>
         </div>
         <div className="netbar">
@@ -265,6 +270,7 @@ const MessagesView = () => {
             upload={netspeed.send}
             download={netspeed.receive}
           />
+          <NetLatencyView capturing={capturing} latency={23} />
         </div>
       </div>
       <ResizableTable>
