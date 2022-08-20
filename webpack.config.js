@@ -18,18 +18,7 @@ const alias = {
 // load the secrets
 const secretsPath = path.join(__dirname, 'secrets.' + env.NODE_ENV + '.js');
 
-const fileExtensions = [
-  'jpg',
-  'jpeg',
-  'png',
-  'gif',
-  'eot',
-  'otf',
-  'svg',
-  'ttf',
-  'woff',
-  'woff2',
-];
+const fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2'];
 
 if (fileSystem.existsSync(secretsPath)) {
   alias['secrets'] = secretsPath;
@@ -41,13 +30,7 @@ let options = {
     options: path.join(__dirname, 'src', 'pages', 'Options', 'index.jsx'),
     popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.jsx'),
     background: path.join(__dirname, 'src', 'pages', 'Background', 'index.js'),
-    contentScript: path.join(
-      __dirname,
-      'src',
-      'pages',
-      'ContentScripts',
-      'index.js'
-    ),
+    contentScript: path.join(__dirname, 'src', 'pages', 'ContentScripts', 'index.js'),
     devtools: path.join(__dirname, 'src', 'pages', 'Devtools', 'index.js'),
     panel: path.join(__dirname, 'src', 'pages', 'Panel', 'index.jsx'),
   },
@@ -116,9 +99,7 @@ let options = {
   },
   resolve: {
     alias: alias,
-    extensions: fileExtensions
-      .map((extension) => '.' + extension)
-      .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
+    extensions: fileExtensions.map((extension) => '.' + extension).concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
   },
   plugins: [
     new CleanWebpackPlugin({ verbose: false }),
@@ -138,7 +119,7 @@ let options = {
                 description: process.env.npm_package_description,
                 version: process.env.npm_package_version,
                 ...JSON.parse(content.toString()),
-              })
+              }),
             );
           },
         },
